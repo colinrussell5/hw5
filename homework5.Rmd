@@ -1,0 +1,77 @@
+---
+title: "Homework 5"
+author: "Colin"
+date: "2023-03-06"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+
+1. What is the overall number of chocolate bars rated?
+  There are 1852 different chocolate bars that have been rated in the data set.
+```{R}
+install.packages("tidyverse")
+library(tidyverse)
+library(ggplot2)
+choc = read.csv("https://ds202-at-isu.github.io/labs/data/choco.csv")
+nrow(choc)
+head(choc)
+```
+
+2. How does the number of ratings depend on the year? Draw a bar chart of the number of reports.
+  The number of ratings incremented almost linearly, but dropped off heavily after the year 2015.
+```{R}
+year = table(choc$Review.Date)
+barplot(year, main="Chocolate Rating Based on the Year", xlab="Year", ylab = "Chocolates Rated")
+```
+
+1. How are ratings distributed? Draw a histogram of ratings and describe it. Don’t forget to mention outliers, if there are any.
+    A large majority of chocolate bars fall inbetween a 2.5 rating and 4. The ratings from 1-2 are         outliers due to them having very few data points compared to the rest of the graph.
+```{r}
+hist(choc$Rating, main="Rating Distribution", xlab="Rating", ylim = c(0,700))
+```
+
+2. Do ratings depend on the cocoa percentage of a chocolate bar?
+    Cocoa percentage and rating are indepdent from one another. 
+```{r}
+attach(choc)
+plot(Rating, Cocoa.Pct, xlab="Cocoa Rating", ylab="Cocoa %")
+```
+
+3. How do ratings compare across different company locations? Focus on the three locations with the most ratings:
+    The ratings across the 3 countries are similar and have almost identical medians.
+```{r}
+top3 = dplyr::filter(choc, Company.Location %in% c("U.S.A.", "France", "Canada"))
+ggplot(top3, aes(x = Company.Location, y = Rating)) + geom_boxplot()
+```
+
+
+My Own Question:
+Is there any relationship between REF and Rating?
+    There doesn't seem to be any correlation between the two variables.
+```{R}
+ggplot(data=choc, aes(x=REF, y=Rating)) + geom_jitter()
+```
